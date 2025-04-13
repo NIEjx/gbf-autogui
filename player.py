@@ -16,6 +16,12 @@ def getChromeWindow(title):
         windows = [w for w in gw.getWindowsWithTitle("Chrome") if w.isActive]
     return windows[0] if windows else None
 
+
+def clickCenter(window):
+    x = window.left + window.width/2+random.randint(-10, 10)
+    y = window.top + window.height/2+random.randint(-10, 10)
+    pyautogui.click(x, y)
+
 def clickInWindow(index, window, buttonImagePath, timeout=10, confidence=0.85, debug=False):
     print(f'attempt to click {buttonImagePath}')
     region = (window.left, window.top, window.width, window.height)
@@ -128,16 +134,18 @@ def raidCollectMeat(window):
     stepCtn+=1
     while not ifButtonInWindow(window, "gbf\\ok.png", confidence=0.9):
         print("waiting for battle end")
-        time.sleep(30)
+        time.sleep(20)
 
     while not ifButtonInWindow(window, "gbf\\replay_battle.png"):
         clickInWindow(stepCtn, window, "gbf\\ok.png")
         stepCtn+=1
-        time.sleep(0.5)
+        time.sleep(0.1)
+        clickCenter(window)
+        time.sleep(0.1)
     
     clickInWindow(stepCtn, window, "gbf\\replay_battle.png")
     stepCtn+=1
-    clickInWindow(stepCtn, window, "gbf\\ok.png", timeout=5)
+    clickInWindow(stepCtn, window, "gbf\\ok.png", timeout=1)
     
 def raidHell(window):
     stepCtn = 1
@@ -153,7 +161,7 @@ def raidHell(window):
     stepCtn+=1
     # コンテンツ切り替え
     time.sleep(0.5)
-    clickInWindow(stepCtn, window, "gbf\\battle_ss_light_zeus.png")
+    clickInWindow(stepCtn, window, "gbf\\battle_ss_light_lucifer.png")
     stepCtn+=1
     clickInWindow(stepCtn, window, "gbf\\ok.png")
     stepCtn+=1
@@ -166,7 +174,11 @@ def raidHell(window):
             stepCtn+=1
             # コンテンツ切り替え
             time.sleep(0.5)
-            if clickInWindow(stepCtn, window, "gbf\\battle_ss_light_zeus.png", timeout=2):
+            if clickInWindow(stepCtn, window, "gbf\\battle_ss_light_lucifer.png", timeout=2):
+                stepCtn+=1
+                clickInWindow(stepCtn, window, "gbf\\ok.png", timeout=2)
+                stepCtn+=1
+            elif  clickInWindow(stepCtn, window, "gbf\\battle_ss_light_zeus.png", timeout=2):
                 stepCtn+=1
                 clickInWindow(stepCtn, window, "gbf\\ok.png", timeout=2)
                 stepCtn+=1
@@ -174,11 +186,13 @@ def raidHell(window):
     while not ifButtonInWindow(window, "gbf\\replay_battle.png"):
         clickInWindow(stepCtn, window, "gbf\\ok.png")
         stepCtn+=1
-        time.sleep(0.5)
-    
+        time.sleep(0.1)
+        clickCenter(window)
+        time.sleep(0.1)
+
     clickInWindow(stepCtn, window, "gbf\\replay_battle.png")
     stepCtn+=1
-    clickInWindow(stepCtn, window, "gbf\\ok.png", timeout=5)
+    clickInWindow(stepCtn, window, "gbf\\ok.png", timeout=2)
     
 def runBattle(func):
     print("finding GBF window")
